@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
+const taskRoutes =require('./routes/task');
 
 
 const app = express();
@@ -13,6 +15,14 @@ app.use(express.json());
 
 async function start(){
     try{
+        await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log('Connected to MongoDB');
+
+    app.use('/api/tasks', taskRoutes);
+
         app.listen(port, () => {
             console.log(`Server is running on port: ${port}`);
         });
