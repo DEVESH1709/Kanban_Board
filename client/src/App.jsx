@@ -31,16 +31,16 @@ function App() {
   const [editTaskTitle, setEditTaskTitle] = useState('')
 
    useEffect (()=>{
-    const savedCols = localStorage.getItem('coloumns')
+    const savedCols = localStorage.getItem('columns')
     if(savedCols){
       try{
-        const parsed = JOSN.parse(savedCols);
+        const parsed = JSON.parse(savedCols);
         if(Array.isArray(parsed)) setColumnsState(parsed);
-        else console.error('Ignored saved coloumns (not an array',parsed);
+        else console.error('Ignored saved columns (not an array',parsed);
 
       }
       catch(err){
-        console.error('Failed to parse saved coloumns',err);
+        console.error('Failed to parse saved columns',err);
       }
     }
 
@@ -87,11 +87,11 @@ function App() {
     setShowAddColumnModal(true);
    }
     
-   function submitAddColoumn(){
+   function submitAddColumn(){
     const label = (newColumnName ||'').trim()
     if(!label) return 
     const key  = label.toLowerCase().replace(/\s+/g,'-')
-    setColumnState(prev =>[prev,{key, label}])
+    setColumnsState(prev =>[prev,{key, label}])
     setNewColumnName('')
     setShowAddColumnModal(false)
    }
