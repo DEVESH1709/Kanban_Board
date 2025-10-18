@@ -8,7 +8,7 @@ export default function TaskCard ({task,onEdit,onDelete,onStartEdit}){
 
     return (
         <div className = "bg-white rounded shadow cursor-move border border-emerald-100 overflow-hidden"
-         draggble
+         draggable
          onDragStart ={handleDragStart}
         >
     <div className="bg-green-200 rounded-t px-4 py-3 flex justify-between items-center">
@@ -19,14 +19,13 @@ export default function TaskCard ({task,onEdit,onDelete,onStartEdit}){
             draggable={false}
             onClick={e => {
               e.stopPropagation()
-       
               if(onStartEdit) onStartEdit(task)
               else{
                 const newTitle = prompt('Edit task title:',task.title)
                 if(newTitle && onEdit) onEdit(newTitle)
               }
             }}
-            className="p-1 rounded hover:bg-green-100"
+            className="p-1 rounded hover:bg-green-100 cursor-pointer"
             aria-label="Edit task"
           ><FiEdit /></button>
           <button
@@ -36,7 +35,7 @@ export default function TaskCard ({task,onEdit,onDelete,onStartEdit}){
               e.stopPropagation()
               onDelete()
             }}
-            className="p-1 rounded hover:bg-green-100"
+            className="p-1 rounded hover:bg-green-100 cursor-pointer"
             aria-label="Delete task"
           ><FiTrash2 /></button>
         </div>

@@ -246,7 +246,7 @@ function App() {
                 {(columns[col.key] || []).map(task => (
                   <TaskCard 
                     key={task._id} 
-                    task={task} 
+                    task={task}
                     onEdit={newTitle => updateTask(task._id, { title: newTitle })}
                     onDelete={() => deleteTask(task._id)}
                     onStartEdit={() => {

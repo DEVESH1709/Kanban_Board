@@ -102,6 +102,7 @@
   padding: 8px 12px;
   border-radius: 6px;
   border: none;
+  cursor: pointer;
 }
 
 .btn-secondary {
@@ -110,6 +111,7 @@
   padding: 8px 12px;
   border-radius: 6px;
   border: none;
+  cursor: pointer;
 }
 
 .column-header {

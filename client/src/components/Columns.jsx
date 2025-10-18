@@ -13,7 +13,7 @@ export default function Column ({name,children,onEditColumn, onDeleteColumn}){
               type ="button"
               draggable ={false}
               onClick = {e =>{e.stopPropagation(); if (onEditColumn) onEditColumn()}}
-              className ="p-1 rounded hover:bg-gray-100"
+              className ="p-1 rounded hover:bg-gray-100 cursor-pointer"
               aria-label="Edit column"
             > <FiEdit/>
             </button>
