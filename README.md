@@ -151,16 +151,6 @@ It will automatically connect to the backend at `http://localhost:5000/api/tasks
 app.use(cors({ origin: "http://localhost:5173" }));
 ```
 
----
-
-## UI Preview
-
-*(You can replace this image with your actual screenshot)*
-
-![Kanban Board UI](https://user-images.githubusercontent.com/0000000/kanban-preview.png)
-
----
-
 ## Example Workflow
 
 1. Add a task → appears in “To Do”.
