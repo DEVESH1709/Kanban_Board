@@ -27,7 +27,8 @@ function App() {
    const [showEditColumnModal, setShowEditColumnModal] = useState(false)
   const [editingColumnKey, setEditingColumnKey] = useState(null)
   const [editColumnName, setEditColumnName] = useState('')
-
+   const [editingTask, setEditingTask] = useState(null)
+  const [editTaskTitle, setEditTaskTitle] = useState('')
 
    useEffect (()=>{
     const savedCols = localStorage.getItem('coloumns')
@@ -148,6 +149,23 @@ function App() {
     setEditColumnName('')
     setShowEditColumnModal(false)
   }
+
+  function submitEditTask() {
+    if (!editingTask) return
+    const id = editingTask._id
+    const title = (editTaskTitle || '').trim()
+    if (!title) return
+
+    setEditingTask(null)
+    setEditTaskTitle('')
+    if (String(id).startsWith('temp-')) {
+      setTasks(prev => prev.map(t => t._id === id ? { ...t, title } : t))
+      return
+    }
+
+    updateTask(id, { title })
+  }
+
   function updateTask(id, updates) {
     setTasks(prev => prev.map(t => t._id === id ? { ...t, ...updates, syncing: true } : t))
 
@@ -168,7 +186,7 @@ function App() {
       return prev.filter(t => t._id !== id)
     })
 
-  api.delete(`/api/tasks/${id}`)
+  api.delete(`/tasks/${id}`)
       .then(() => {
 
 
@@ -231,6 +249,10 @@ function App() {
                     task={task} 
                     onEdit={newTitle => updateTask(task._id, { title: newTitle })}
                     onDelete={() => deleteTask(task._id)}
+                    onStartEdit={() => {
+                      setEditingTask(task)
+                      setEditTaskTitle(task.title || '')
+                    }}
                   />
                 ))}
               </Column>
@@ -284,6 +306,21 @@ function App() {
             <div className="flex justify-end">
               <button onClick={() => setShowEditColumnModal(false)} className="mr-3">Cancel</button>
               <button onClick={submitEditColumn} className="btn-primary">Save</button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+    {editingTask && (
+        <Modal title="Edit Task" onClose={() => { setEditingTask(null); setEditTaskTitle('') }}>
+          <div className="space-y-4">
+            <label className="block">
+              <span className="text-sm font-medium">Task Title</span>
+              <input value={editTaskTitle} onChange={e => setEditTaskTitle(e.target.value)} className="w-full border rounded px-3 py-2 mt-1" />
+            </label>
+            <div className="flex justify-end">
+              <button onClick={() => { setEditingTask(null); setEditTaskTitle('') }} className="mr-3">Cancel</button>
+              <button onClick={submitEditTask} className="btn-primary">Save</button>
             </div>
           </div>
         </Modal>

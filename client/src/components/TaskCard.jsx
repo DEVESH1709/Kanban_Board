@@ -1,7 +1,7 @@
 import React from 'react';
 import {FiEdit, FiTrash2} from 'react-icons/fi'
 
-export default function TaskCard ({task,onEdit,onDelete}){
+export default function TaskCard ({task,onEdit,onDelete,onStartEdit}){
     function handleDragStart(e){
         e.dataTransfer.setData('taskId', task._id)
     }
@@ -19,8 +19,12 @@ export default function TaskCard ({task,onEdit,onDelete}){
             draggable={false}
             onClick={e => {
               e.stopPropagation()
-              const newTitle = prompt('Edit task title:', task.title)
-              if (newTitle) onEdit(newTitle)
+       
+              if(onStartEdit) onStartEdit(task)
+              else{
+                const newTitle = prompt('Edit task title:',task.title)
+                if(newTitle && onEdit) onEdit(newTitle)
+              }
             }}
             className="p-1 rounded hover:bg-green-100"
             aria-label="Edit task"
