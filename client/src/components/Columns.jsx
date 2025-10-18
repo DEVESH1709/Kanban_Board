@@ -8,8 +8,8 @@ export default function Column({
   onDeleteColumn,
 }) {
   return (
-    <div className="flex-1 min-h-[300px]">
-      <div className="flex items-center justify-between mb-4 gap-5">
+    <div className="flex-1 min-h-[300px] flex flex-col">
+      <div className="flex items-center justify-between mb-4 gap-5 flex-none">
         <h2 className="font-semibold text-lg">{name}</h2>
         <div className="flex items-center gap-2">
           <button
@@ -40,7 +40,7 @@ export default function Column({
         </div>
       </div>
 
-      <div className="space-y-4">{children}</div>
+      <div className="space-y-4 overflow-auto flex-1">{children}</div>
     </div>
   );
 }

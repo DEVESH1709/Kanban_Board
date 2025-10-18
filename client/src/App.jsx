@@ -275,6 +275,7 @@ function App() {
           </div>
         </div>
 
+<div className="columns-scroll">
         <div className="flex gap-6">
           {columnsState.map((col, idx) => (
             <div
@@ -307,6 +308,7 @@ function App() {
               </Column>
             </div>
           ))}
+        </div>
         </div>
       </main>
 

@@ -12,9 +12,9 @@ export default function TaskCard({ task, onEdit, onDelete, onStartEdit }) {
       draggable
       onDragStart={handleDragStart}
     >
-      <div className="bg-green-200 rounded-t px-4 py-3 flex justify-between items-center">
-        <strong>{task.title}</strong>
-        <div className="flex items-center gap-2">
+      <div className="bg-green-200 rounded-t px-4 py-3 flex justify-between items-center gap-2">
+        <strong className = "block truncate">{task.title}</strong>
+        <div className="flex items-center gap-2 flex-none">
           <button
             type="button"
             draggable={false}

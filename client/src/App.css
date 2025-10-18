@@ -1,19 +1,23 @@
+
+html, body, #root{
+  height:100%;
+}
+
 .app-root {
   background: #ffffff;
   color: #111827;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .app-header {
   background: #ffffff;
 }
 
-.app-logo {
-  width: 36px;
-  height: 36px;
-  background: #0f172a;
-  color: #fff;
-  border-radius: 50%;
-  font-weight: 700;
+main{
+  flex: 1 1 auto;
+  overflow: auto;
 }
 
 .btn-primary {
@@ -22,6 +26,7 @@
   padding: 8px 12px;
   border-radius: 6px;
   border: none;
+  cursor: pointer;
 }
 
 .btn-secondary {
@@ -30,6 +35,7 @@
   padding: 8px 12px;
   border-radius: 6px;
   border: none;
+  cursor: pointer;
 }
 
 .column-header {
@@ -60,6 +66,23 @@
 .column-wrapper {
   min-width: 340px;
 }
+
+.columns-scroll {
+  overflow-x: auto;
+  padding-bottom: 8px; 
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+
+.columns-scroll::-webkit-scrollbar {
+  height: 0; 
+  display: none;
+}
+.columns-scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
 
 .task-card-title {
   background: #d1fae5;
