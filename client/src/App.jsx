@@ -42,7 +42,18 @@ function App() {
         if (Array.isArray(parsed)) setColumnsState(parsed);
         else console.error("Ignored saved columns (not an array", parsed);
       } catch (err) {
-        console.error("Failed to parse saved columns", err);
+        console.warn("Failed to parse saved columns", err);
+      }
+    }
+    
+    const saved = localStorage.getItem('tasks')
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed)) setTasks(parsed)
+        else console.warn('Ignored saved tasks (not an array):', parsed)
+      } catch (err) {
+        console.warn('Failed to parse saved tasks:', err)
       }
     }
 
@@ -91,6 +102,8 @@ function App() {
   }, [columnsState]);
 
   function addTask() {
+    const defaultStatus = (columnsState && columnsState[0] && columnsState[0].key) || 'todo'
+    setNewTaskStatus(defaultStatus)
     setShowAddTaskModal(true);
   }
 
@@ -151,8 +164,7 @@ function App() {
     setNewTaskTitle("");
     setShowAddTaskModal(false);
 
-    api
-      .post("/tasks", { title, status: defaultStatus })
+    api.post("/tasks", { title, status: defaultStatus })
       .then((res) => {
         const serverTask = res.data;
         setTasks((prev) =>
@@ -201,8 +213,7 @@ function App() {
       prev.map((t) => (t._id === id ? { ...t, ...updates, syncing: true } : t))
     );
 
-    api
-      .put(`/tasks/${id}`, updates)
+    api.put(`/tasks/${id}`, updates)
       .then((res) => {
         setTasks((prev) => prev.map((t) => (t._id === id ? res.data : t)));
       })
@@ -223,8 +234,7 @@ function App() {
       return prev.filter((t) => t._id !== id);
     });
 
-    api
-      .delete(`/tasks/${id}`)
+    api.delete(`/tasks/${id}`)
       .then(() => {})
       .catch((err) => {
         console.error("deleteTask failed, reverting local delete:", err);
