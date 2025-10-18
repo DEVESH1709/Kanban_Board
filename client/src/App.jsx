@@ -1,10 +1,15 @@
 import React from 'react'
-import {useState} from 'react'
+import {useState,useEffect} from 'react'
+import api from './api'
+import Column from './components/Columns'
+import TaskCard from './components/TaskCard'
+import Modal from './components/Modal'
+import './App.css'
 
 function App() {
 
   const [tasks,setTasks] = useState([]);
-   const [columnsState,setColoumnState] = useState([
+   const [columnsState,setColumnsState] = useState([
     {
       key:'todo', label:'To Do'
     },
@@ -19,13 +24,17 @@ function App() {
   const [newColumnName, setNewColumnName] = useState('')
    const [showAddTaskModal, setShowAddTaskModal] = useState(false)
   const [newTaskTitle, setNewTaskTitle] = useState('');
+   const [showEditColumnModal, setShowEditColumnModal] = useState(false)
+  const [editingColumnKey, setEditingColumnKey] = useState(null)
+  const [editColumnName, setEditColumnName] = useState('')
+
 
    useEffect (()=>{
     const savedCols = localStorage.getItem('coloumns')
     if(savedCols){
       try{
         const parsed = JOSN.parse(savedCols);
-        if(Array.isArray(parsed)) setColoumnState(parsed);
+        if(Array.isArray(parsed)) setColumnsState(parsed);
         else console.error('Ignored saved coloumns (not an array',parsed);
 
       }
@@ -61,7 +70,7 @@ function App() {
 
    useEffect(()=>{
        localStorage.setItem('tasks',JSON.stringify(tasks))
-       localStorage.setItem('column',JSON.stringify(coloumnsState))
+       localStorage.setItem('column',JSON.stringify(columnsState))
 
    },[tasks]);
 

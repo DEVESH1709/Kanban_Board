@@ -1,5 +1,5 @@
 import React from 'react';
-import {FiEdit, FiTrash2} from 'react-icon/fi'
+import {FiEdit, FiTrash2} from 'react-icons/fi'
 
 export default function TaskCard ({task,onEdit,onDelete}){
     function handleDragStart(e){
