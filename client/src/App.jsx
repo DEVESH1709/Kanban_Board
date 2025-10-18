@@ -20,16 +20,17 @@ function App() {
       key:'done', label:'Done'
     }
    ]);
-   const [showAddColumnModal, setShowAddColumnModal] = useState(false)
+   
+  const [showAddColumnModal, setShowAddColumnModal] = useState(false)
   const [newColumnName, setNewColumnName] = useState('')
-   const [showAddTaskModal, setShowAddTaskModal] = useState(false)
+  const [showAddTaskModal, setShowAddTaskModal] = useState(false)
   const [newTaskTitle, setNewTaskTitle] = useState('');
-   const [showEditColumnModal, setShowEditColumnModal] = useState(false)
+  const [showEditColumnModal, setShowEditColumnModal] = useState(false)
   const [editingColumnKey, setEditingColumnKey] = useState(null)
   const [editColumnName, setEditColumnName] = useState('')
-   const [editingTask, setEditingTask] = useState(null)
+  const [editingTask, setEditingTask] = useState(null)
   const [editTaskTitle, setEditTaskTitle] = useState('')
-
+  const [newTaskStatus, setNewTaskStatus] = useState('')
    useEffect (()=>{
     const savedCols = localStorage.getItem('columns')
     if(savedCols){
