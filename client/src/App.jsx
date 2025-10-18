@@ -288,6 +288,19 @@ function App() {
               <span className="text-sm font-medium">Task Title</span>
               <input value={newTaskTitle} onChange={e => setNewTaskTitle(e.target.value)} className="w-full border rounded px-3 py-2 mt-1" />
             </label>
+            <label className = "block">
+            <span className = "text-sm font-medium"> Status</span>
+             <select value ={newTaskStatus} onChange ={e=>setNewTaskStatus(e.target.value)} className = "w-full border rounded px-3 py-2 mt-1">
+              {
+                columnsState.map(c =>(
+                  <option key ={c.key} value ={c.key}>
+                  {c.label}
+
+                  </option>
+                ))
+              }
+              </select>
+            </label>
             <div className="flex justify-end">
               <button onClick={() => setShowAddTaskModal(false)} className="mr-3">Cancel</button>
               <button onClick={submitAddTask} className="btn-primary">Add Task</button>
