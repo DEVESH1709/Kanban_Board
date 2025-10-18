@@ -33,6 +33,7 @@ function App() {
   const [editingTask, setEditingTask] = useState(null);
   const [editTaskTitle, setEditTaskTitle] = useState("");
   const [newTaskStatus, setNewTaskStatus] = useState("");
+  
   useEffect(() => {
     const savedCols = localStorage.getItem("columns");
     if (savedCols) {
@@ -45,8 +46,7 @@ function App() {
       }
     }
 
-    api
-      .get("/tasks")
+    api.get("/tasks")
       .then((res) => {
         const data = res.data;
         let serverTasks = [];
@@ -83,7 +83,7 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
-    localStorage.setItem("column", JSON.stringify(columnsState));
+    localStorage.setItem("columns", JSON.stringify(columnsState));
   }, [tasks]);
 
   useEffect(() => {
