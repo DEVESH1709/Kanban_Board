@@ -1,5 +1,5 @@
 import React from 'react'
-import {useState,useEffect} from 'react'
+import { useState, useEffect } from 'react'
 import api from './api'
 import Column from './components/Columns'
 import TaskCard from './components/TaskCard'
@@ -8,19 +8,19 @@ import './App.css'
 
 function App() {
 
-  const [tasks,setTasks] = useState([]);
-   const [columnsState,setColumnsState] = useState([
+  const [tasks, setTasks] = useState([]);
+  const [columnsState, setColumnsState] = useState([
     {
-      key:'todo', label:'To Do'
+      key: 'todo', label: 'To Do'
     },
     {
-      key:'inprogress', label:'In Progress'
+      key: 'inprogress', label: 'In Progress'
     },
     {
-      key:'done', label:'Done'
+      key: 'done', label: 'Done'
     }
-   ]);
-   
+  ]);
+
   const [showAddColumnModal, setShowAddColumnModal] = useState(false)
   const [newColumnName, setNewColumnName] = useState('')
   const [showAddTaskModal, setShowAddTaskModal] = useState(false)
@@ -31,81 +31,81 @@ function App() {
   const [editingTask, setEditingTask] = useState(null)
   const [editTaskTitle, setEditTaskTitle] = useState('')
   const [newTaskStatus, setNewTaskStatus] = useState('')
-   useEffect (()=>{
+  useEffect(() => {
     const savedCols = localStorage.getItem('columns')
-    if(savedCols){
-      try{
+    if (savedCols) {
+      try {
         const parsed = JSON.parse(savedCols);
-        if(Array.isArray(parsed)) setColumnsState(parsed);
-        else console.error('Ignored saved columns (not an array',parsed);
+        if (Array.isArray(parsed)) setColumnsState(parsed);
+        else console.error('Ignored saved columns (not an array', parsed);
 
       }
-      catch(err){
-        console.error('Failed to parse saved columns',err);
+      catch (err) {
+        console.error('Failed to parse saved columns', err);
       }
     }
 
-    api.get('/tasks').then(res =>{
+    api.get('/tasks').then(res => {
       const data = res.data
       let serverTasks = [];
-      if(Array.isArray(data)) serverTasks = data
+      if (Array.isArray(data)) serverTasks = data
       else if (data && Array.isArray(data.tasks)) serverTasks = data.tasks;
-      else{
+      else {
         console.warn('Unexpected /api/tasks response shape, expected array:', data)
-        return ;
+        return;
       }
 
-      setTasks(prevLocal =>{
+      setTasks(prevLocal => {
         const prev = Array.isArray(prevLocal) ? prevLocal : [];
-        const serverIds = new Set (serverTasks.map(t => String(t._id)))
-        const localOnly = prev.filter(t=> !t._id || String(t._id).startsWith('temp-') || !serverIds.has(String(t._id)))
-        return [...serverTasks,...localOnly];
+        const serverIds = new Set(serverTasks.map(t => String(t._id)))
+        const localOnly = prev.filter(t => !t._id || String(t._id).startsWith('temp-') || !serverIds.has(String(t._id)))
+        return [...serverTasks, ...localOnly];
 
 
       })
     })
 
-    .catch(err =>{
-      console.error('Failed to fetch server tasks (continuing with local data):', err && err.message ? err.message : err);
-    })
-   },[])
+      .catch(err => {
+        console.error('Failed to fetch server tasks (continuing with local data):', err && err.message ? err.message : err);
+      })
+  }, [])
 
-   useEffect(()=>{
-       localStorage.setItem('tasks',JSON.stringify(tasks))
-       localStorage.setItem('column',JSON.stringify(columnsState))
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks))
+    localStorage.setItem('column', JSON.stringify(columnsState))
 
-   },[tasks]);
+  }, [tasks]);
 
-   useEffect(()=>{
-    localStorage.setItem('columns',JSON.stringify(columnsState))
-   },[columnsState])
+  useEffect(() => {
+    localStorage.setItem('columns', JSON.stringify(columnsState))
+  }, [columnsState])
 
-   function addTask(){
+  function addTask() {
     setShowAddTaskModal(true);
-   }
+  }
 
-   function addColumn(){
+  function addColumn() {
     setShowAddColumnModal(true);
-   }
-    
-   function submitAddColumn(){
-    const label = (newColumnName ||'').trim()
-    if(!label) return 
-    const key  = label.toLowerCase().replace(/\s+/g,'-')
-    setColumnsState(prev =>[prev,{key, label}])
+  }
+
+  function submitAddColumn() {
+    const label = (newColumnName || '').trim()
+    if (!label) return
+    const key = label.toLowerCase().replace(/\s+/g, '-')
+    setColumnsState(prev => [prev, { key, label }])
     setNewColumnName('')
     setShowAddColumnModal(false)
-   }
+  }
 
-   function editColumn(key){
+  function editColumn(key) {
     const col = columnsState.find(c => c.key === key)
     if (!col) return
     setEditingColumnKey(key)
     setEditColumnName(col.label)
     setShowEditColumnModal(true)
-   }
+  }
 
-   
+
   function deleteColumn(key) {
     if (columnsState.length <= 1) {
       alert('Cannot delete the last column')
@@ -115,7 +115,7 @@ function App() {
     setTasks(prev => prev.map(t => t.status === key ? { ...t, status: firstKey } : t))
     setColumnsState(prev => prev.filter(c => c.key !== key))
   }
- function makeTempId() {
+  function makeTempId() {
     return `temp-${Date.now()}-${Math.floor(Math.random() * 100000)}`
   }
 
@@ -130,7 +130,7 @@ function App() {
     setNewTaskTitle('')
     setShowAddTaskModal(false)
 
-  api.post('/tasks', { title, status: defaultStatus })
+    api.post('/tasks', { title, status: defaultStatus })
       .then(res => {
         const serverTask = res.data
         setTasks(prev => prev.map(t => t._id === tempId ? serverTask : t))
@@ -141,7 +141,7 @@ function App() {
       })
   }
 
-    
+
   function submitEditColumn() {
     const trimmed = (editColumnName || '').trim()
     if (!trimmed) return
@@ -170,7 +170,7 @@ function App() {
   function updateTask(id, updates) {
     setTasks(prev => prev.map(t => t._id === id ? { ...t, ...updates, syncing: true } : t))
 
-  api.put(`/tasks/${id}`, updates)
+    api.put(`/tasks/${id}`, updates)
       .then(res => {
         setTasks(prev => prev.map(t => t._id === id ? res.data : t))
       })
@@ -187,7 +187,7 @@ function App() {
       return prev.filter(t => t._id !== id)
     })
 
-  api.delete(`/tasks/${id}`)
+    api.delete(`/tasks/${id}`)
       .then(() => {
 
 
@@ -209,7 +209,7 @@ function App() {
     }
   }
   function handleDragOver(e) {
-    e.preventDefault() 
+    e.preventDefault()
   }
 
   const safeTasks = Array.isArray(tasks) ? tasks : []
@@ -220,20 +220,20 @@ function App() {
 
 
   return (
-   <div className="app-root min-h-screen bg-white">
-   <header className="app-header px-6 py-4 border-b border-gray-200">
-<div className="flex items-center gap-4">
-<h1 className="text-2xl font-bold">Kanban Board (Styling)</h1>
-</div>
-   </header>
+    <div className="app-root min-h-screen bg-white">
+      <header className="app-header px-6 py-4 border-b border-gray-200">
+        <div className="flex items-center gap-4">
+          <h1 className="text-2xl font-bold">Kanban Board (Styling)</h1>
+        </div>
+      </header>
 
-   <main className = 'p-6'>
-    <div className="mb-4">
+      <main className='p-6'>
+        <div className="mb-4">
           <div className="flex items-start gap-2">
             <button onClick={addTask} className="btn-primary">Add Task</button>
             <button onClick={addColumn} className="btn-secondary">Add Column</button>
           </div>
-</div>
+        </div>
 
         <div className="flex gap-6">
           {columnsState.map((col, idx) => (
@@ -245,8 +245,8 @@ function App() {
             >
               <Column name={col.label} onEditColumn={() => editColumn(col.key)} onDeleteColumn={() => deleteColumn(col.key)}>
                 {(columns[col.key] || []).map(task => (
-                  <TaskCard 
-                    key={task._id} 
+                  <TaskCard
+                    key={task._id}
                     task={task}
                     onEdit={newTitle => updateTask(task._id, { title: newTitle })}
                     onDelete={() => deleteTask(task._id)}
@@ -261,9 +261,9 @@ function App() {
           ))}
         </div>
 
-   </main>
+      </main>
 
-    {showAddColumnModal && (
+      {showAddColumnModal && (
         <Modal title="Add New Column" onClose={() => setShowAddColumnModal(false)}>
           <div className="space-y-4">
             <label className="block">
@@ -276,7 +276,7 @@ function App() {
               />
             </label>
             <div className="flex justify-end">
-              <button onClick={() => setShowAddColumnModal(false)} className="mr-3">Cancel</button>
+              <button onClick={() => setShowAddColumnModal(false)} className="mr-3 cursor-pointer">Cancel</button>
               <button onClick={submitAddColumn} className="btn-primary">Add Column</button>
             </div>
           </div>
@@ -286,25 +286,25 @@ function App() {
         <Modal title="Add New Task" onClose={() => setShowAddTaskModal(false)}>
           <div className="space-y-4">
             <label className="block">
-              <span className="text-sm font-medium">Task Title</span>
-              <input value={newTaskTitle} onChange={e => setNewTaskTitle(e.target.value)} className="w-full border rounded px-3 py-2 mt-1" />
+              <span className="text-sm font-medium">Task Title {!newTaskTitle.trim() && <span className ="text-red-500 ml-1">*</span>}</span>
+              <input value={newTaskTitle} required aria-required="true" onChange={e => setNewTaskTitle(e.target.value)} className="w-full border rounded px-3 py-2 mt-1" />
             </label>
-            <label className = "block">
-            <span className = "text-sm font-medium"> Status</span>
-             <select value ={newTaskStatus} onChange ={e=>setNewTaskStatus(e.target.value)} className = "w-full border rounded px-3 py-2 mt-1">
-              {
-                columnsState.map(c =>(
-                  <option key ={c.key} value ={c.key}>
-                  {c.label}
+            <label className="block">
+              <span className="text-sm font-medium"> Status</span>
+              <select value={newTaskStatus} onChange={e => setNewTaskStatus(e.target.value)} className="w-full border rounded px-3 py-2 mt-1">
+                {
+                  columnsState.map(c => (
+                    <option key={c.key} value={c.key}>
+                      {c.label}
 
-                  </option>
-                ))
-              }
+                    </option>
+                  ))
+                }
               </select>
             </label>
             <div className="flex justify-end">
-              <button onClick={() => setShowAddTaskModal(false)} className="mr-3">Cancel</button>
-              <button onClick={submitAddTask} className="btn-primary">Add Task</button>
+              <button onClick={() => setShowAddTaskModal(false)} className="mr-3 cursor-pointer">Cancel</button>
+              <button onClick={submitAddTask} className="btn-primary" disabled={!newTaskTitle.trim()}>Add Task</button>
             </div>
           </div>
         </Modal>
@@ -325,22 +325,22 @@ function App() {
         </Modal>
       )}
 
-    {editingTask && (
+      {editingTask && (
         <Modal title="Edit Task" onClose={() => { setEditingTask(null); setEditTaskTitle('') }}>
           <div className="space-y-4">
             <label className="block">
-              <span className="text-sm font-medium">Task Title</span>
+              <span className="text-sm font-medium" >Task Title {!editTaskTitle.trim() && <span className="text-red-500 ml-1">*</span>}</span>
               <input value={editTaskTitle} onChange={e => setEditTaskTitle(e.target.value)} className="w-full border rounded px-3 py-2 mt-1" />
             </label>
             <div className="flex justify-end">
               <button onClick={() => { setEditingTask(null); setEditTaskTitle('') }} className="mr-3">Cancel</button>
-              <button onClick={submitEditTask} className="btn-primary">Save</button>
+              <button onClick={submitEditTask} className="btn-primary" disabled={!editTaskTitle.trim()}>Save</button>
             </div>
           </div>
         </Modal>
       )}
 
-   </div>
+    </div>
   )
 }
 
