@@ -179,27 +179,3 @@ app.use(cors({ origin: "http://localhost:5173" }));
 * Make sure to update your frontend API base URL to your deployed backend endpoint.
 
 ---
-
-##  Author
-
-** Developer:** [Your Name]
-** Contact:** [[your.email@example.com](mailto:your.email@example.com)]
-** GitHub:** [github.com/your-username]
-
----
-
-## License
-
-This project is open-source and available under the [MIT License](LICENSE).
-
----
-
-### Notes for Interviewer
-
-* Code is modular, clean, and structured in a realistic production style.
-* LocalStorage + API sync demonstrates robust offline-first architecture.
-* Each commit follows logical development progression (backend → frontend → integration).
-
----
- like me to also include a **`README` version with emojis + better GitHub formatting (badges, live demo link placeholders, etc.)** — the kind that makes your repo look like a real open-source project?
-```
