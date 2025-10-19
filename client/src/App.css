@@ -65,6 +65,7 @@ main{
 
 .column-wrapper {
   min-width: 340px;
+   padding:4px;
 }
 
 .columns-scroll {
