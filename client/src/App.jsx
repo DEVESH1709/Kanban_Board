@@ -150,14 +150,12 @@ function App() {
   function submitAddTask() {
     const title = (newTaskTitle || "").trim();
     if (!title) return;
-    const defaultStatus =
-      (columnsState && columnsState[0] && columnsState[0].key) || "todo";
-
+   const status = newTaskStatus || ((columnsState && columnsState[0] && columnsState[0].key) || 'todo')
     const tempId = makeTempId();
     const tempTask = {
       _id: tempId,
       title,
-      status: defaultStatus,
+      status,
       isLocal: true,
     };
     setTasks((prev) => [...prev, tempTask]);
