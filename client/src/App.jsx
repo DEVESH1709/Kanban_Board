@@ -101,6 +101,38 @@ function App() {
     localStorage.setItem("columns", JSON.stringify(columnsState));
   }, [columnsState]);
 
+  
+   useEffect(() => {
+    try {
+      const raw = localStorage.getItem("pendingDeletes") || "[]";
+      const pending = JSON.parse(raw);
+      if (Array.isArray(pending) && pending.length > 0) {
+        const remaining = [];
+        Promise.allSettled(
+          pending.map((p) => api.delete(`/tasks/${p._id}`).then(() => p._id))
+        ).then((results) => {
+          results.forEach((r, idx) => {
+            if (r.status === "fulfilled") {
+               const deletedId = r.value || (pending && pending[idx] && pending[idx]._id);
+              if (deletedId) {
+                setTasks((prev) => prev.filter((t) => String(t._id) !== String(deletedId)));
+                console.log("Flushed pending delete for", deletedId);
+            }} else {
+              remaining.push(pending[idx]);
+            }
+          });
+          try {
+            localStorage.setItem("pendingDeletes", JSON.stringify(remaining));
+          } catch (e) {
+            console.warn("Failed to update pendingDeletes:", e);
+          }
+        });
+      }
+    } catch (e) {
+      console.warn("Failed to parse pendingDeletes:", e);
+    }
+  }, []);
+
   function addTask() {
     const defaultStatus = (columnsState && columnsState[0] && columnsState[0].key) || 'todo'
     setNewTaskStatus(defaultStatus)
@@ -232,11 +264,30 @@ function App() {
       return prev.filter((t) => t._id !== id);
     });
 
+    if(String(id).startsWith("temp-")) return;
+
     api.delete(`/tasks/${id}`)
       .then(() => {})
       .catch((err) => {
-        console.error("deleteTask failed, reverting local delete:", err);
-        if (backup) setTasks((prev) => [...prev, backup]);
+        console.error("deleteTask failed:", err);
+        if(err && err.reslonse){
+          if(backup)
+            if(backup) setTasks((prev) =>[...prev,backup]);
+            return
+        }
+
+        try{
+          const pendingKey = "pendingDeletes";
+          const raw = localStorage.getItem(pendingKey) || "[]";
+          const pending = JSON.parse(raw);
+          if(Array.isArray(pending)){
+            pending.push({_id:id});
+            localStorage.setItem(pendingKey, JSON.stringify(pending));
+          }
+        } catch(e){
+          console.warn("Failed to record pending delete :",e);
+
+        }
       });
   }
 
