@@ -59,10 +59,10 @@ function App() {
 
     api.get("/tasks")
       .then((res) => {
-        const data = res.data;
-        let serverTasks = [];
-        if (Array.isArray(data)) serverTasks = data;
-        else if (data && Array.isArray(data.tasks)) serverTasks = data.tasks;
+        const data = res.data
+        let serverTasks = []
+        if (Array.isArray(data)) serverTasks = data
+        else if (data && Array.isArray(data.tasks)) serverTasks = data.tasks
         else {
           console.warn(
             "Unexpected /api/tasks response shape, expected array:",
