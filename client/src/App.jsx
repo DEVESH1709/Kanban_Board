@@ -194,8 +194,9 @@ function App() {
     setNewTaskTitle("");
     setShowAddTaskModal(false);
 
-    api.post("/tasks", { title, status: defaultStatus })
+    api.post("/tasks", { title, status })
       .then((res) => {
+        console.log('POST /tasks response:', res);
         const serverTask = res.data;
         setTasks((prev) =>
           prev.map((t) => (t._id === tempId ? serverTask : t))

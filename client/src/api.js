@@ -6,7 +6,7 @@ if (!base) {
 }
 
 const api = axios.create({
-  baseURL: base || 'https://kanban-board-1-yudg.onrender.com/api',
+  baseURL: base || 'http://localhost:5000/api',
 })
 
 export default api;
